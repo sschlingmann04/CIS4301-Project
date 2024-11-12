@@ -49,6 +49,10 @@ npm i
 
 This will install the required packages specified in the package.json file.
 
+3. Inside the main directory of the gaming-history-backend folder, duplicate the file ".env.sample" as ".env"
+
+Inside the .env file, fill in the required information.
+
 ## Run 🚀
 
 1. To run, make sure you have the program fully cloned and have run the npm i command to install the required packages for both the frontend and backend folders.
@@ -66,7 +70,7 @@ This will start a live server for the website frontend at the url: **https://loc
 4. Within the terminal and inside the "COP4301-Project/gaming-history-backend" directory, run the command:
 
 ```bash
-npm start
+npm run dev
 ```
 
 This will start a live server for the website backend at the url: **https://localhost:8000**
