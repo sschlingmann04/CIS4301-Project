@@ -11,6 +11,10 @@ var prebuiltRoute = require("./routes/prebuilt");
 var app = express();
 const port = 8000;
 
+const oracledb = require("oracledb");
+require("dotenv").config();
+const dbConfig = require("./config");
+
 const cors = require("cors");
 let corsOptions = {
     origin: ["http://localhost:3000"],
