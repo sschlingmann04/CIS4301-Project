@@ -28,11 +28,27 @@ body {
 
 @layer components {
     .graph-container {
-        @apply flex flex-col w-[70%] h-full px-8;
+        @apply flex flex-col max-h-screen px-8 rounded-3xl pb-12;
+    }
+
+    .top-container {
+        @apply flex flex-row w-full mb-4;
+    }
+
+    .query-examples {
+        @apply flex flex-row;
+    }
+
+    .query-table {
+        @apply bg-slate-600 rounded-lg p-4 space-y-2;
+    }
+
+    .query-table-data {
+        @apply bg-slate-800 rounded-md;
     }
 
     .form-container {
-        @apply flex flex-col w-[30%] h-full mr-4 space-y-4;
+        @apply flex flex-col w-[30%] h-auto mr-4 space-y-4 pb-4;
     }
 
     .form-styles {
@@ -52,7 +68,7 @@ body {
     }
 
     .query-page {
-        @apply flex flex-row w-full pt-24;
+        @apply flex flex-col w-full pt-12 px-12 pb-12;
     }
 
     .form-field-container {

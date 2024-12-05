@@ -1,16 +1,44 @@
+"use client";
+
 import QueryScreenNavButton from "@/components/QueryScreenNavButton";
 import { getPrebuiltQuery } from "@/utils/requests";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import dynamic from "next/dynamic";
+import queries from "@/components/PrebuiltQueryPage/data/queries";
+import Head from "next/head";
+
+const BarChartComponent = dynamic(
+    () => import("@/components/PrebuiltQueryPage/BarChartComponent"),
+    { ssr: false }
+);
+
+const ChartComponent = dynamic(
+    () => import("@/components/PrebuiltQueryPage/ChartComponent"),
+    { ssr: false }
+);
 
 const PreBuiltQuery = () => {
+    const [isClient, setIsClient] = useState(false);
+    const [alert, setAlert] = useState("");
     const [dropdownSelect, setDropdownSelect] = useState("");
     const [loading, setLoading] = useState(false);
     const [formValues, setFormValues] = useState({
-        query_option: "",
-        start_date: "",
-        end_date: "",
+        query_option: "query1",
+        start_date: "2010",
+        end_date: "2015",
     });
     const [getResponse, setGetResponse] = useState("");
+
+    const [labels, setLabels] = useState([]);
+    const [points, setPoints] = useState([]);
+    const [title, setTitle] = useState("");
+    const [ylabel, setYlabel] = useState("");
+
+    const [data, setData] = useState([]);
+
+    const [queryLoaded, setQueryLoaded] = useState("");
+    const [chartType, setChartType] = useState("");
+    const [datesDisabled, setDatesDisabled] = useState(false);
 
     const handleInputChange = (event) => {
         const { name, value } = event.target;
@@ -23,99 +51,243 @@ const PreBuiltQuery = () => {
     const submitFunc = async (event) => {
         setLoading(true);
         console.log("Loading");
-        {
-            /* handle logic 
-            send get request for the specified query    
-        */
-        }
-        setGetResponse(
-            getPrebuiltQuery(
+
+        try {
+            const response = await getPrebuiltQuery(
                 formValues.query_option,
                 formValues.start_date,
                 formValues.end_date
-            )
-        );
+            );
+
+            const currentQuery = queries.find(
+                (query) => query.queryNumber === formValues.query_option
+            );
+
+            setChartType(currentQuery.queryType);
+            setTitle(currentQuery.queryTitle);
+            setYlabel(currentQuery.queryYlabel);
+
+            setData(response);
+            const response_labels = response.map((item) => item[0].toString());
+            const response_points = response.map((item) => item[1]);
+
+            setLabels(response_labels);
+            setPoints(response_points);
+
+            console.log(response);
+        } catch (error) {
+            console.log(error);
+        }
+
         setLoading(false);
     };
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        submitFunc(formValues);
+
+        if (parseInt(formValues.start_date) > parseInt(formValues.end_date)) {
+            window.alert("Start date cannot come before end date!");
+        } else {
+            submitFunc(formValues);
+        }
     };
+
+    useEffect(() => {
+        if (formValues.query_option === "query4") {
+            setFormValues((prev) => ({
+                ...prev,
+                start_date: "2020",
+                end_date: "2021",
+            }));
+            setDatesDisabled(true);
+        } else {
+            setDatesDisabled(false);
+        }
+    }, [formValues.query_option]);
+
+    useEffect(() => {
+        setIsClient(true);
+    }, []);
 
     return (
         <div className="query-page">
-            {/* Graph Section */}
-            <div className="graph-container">
-                <p>Graph</p>
-                <div className="flex flex-row w-full bg-gray-400 h-96" />
-                {/* <p>Query selected: {getResponse}</p> */}
-            </div>
-            {/* Query Form Section */}
-            <div className="form-container">
-                <form className="form-styles" onSubmit={handleSubmit}>
-                    <div className="flex flex-col">
-                        <label className="text-lg font-bold pb-1">
-                            <span className="border-b-2">Select Query</span>
-                        </label>
-                        <select
-                            name="query_option"
-                            className="form-input py-1"
-                            value={formValues.query_option}
-                            onChange={handleInputChange}
-                        >
-                            <option value="q1">Query 1</option>
-                            <option value="q2">Query 2</option>
-                            <option value="q3">Query 3</option>
-                            <option value="q4">Query 4</option>
-                            <option value="q5">Query 5</option>
-                        </select>
-                    </div>
+            <Head>
+                <title>Gaming Throughout History</title>
+                <meta
+                    name="description"
+                    content="Generated by create next app"
+                />
+                <meta
+                    name="viewport"
+                    content="width=device-width, initial-scale=1"
+                />
+                <link rel="icon" href="/favicon.ico" />
+            </Head>
+            <h1 className="text-2xl font-semibold">
+                <span className="pb-1 border-b">
+                    Gaming Through Out History
+                </span>
+            </h1>
 
-                    {/* date selections */}
-                    <div className="flex flex-row space-x-8">
-                        <div className="flex flex-col">
-                            <label className="form-label">
-                                <span className="border-b-2">Start Date</span>
+            {isClient && (
+                <>
+                    {/* Query Form Section */}
+                    <div className="top-container">
+                        <div className="form-container">
+                            <form
+                                className="form-styles"
+                                onSubmit={handleSubmit}
+                            >
+                                <div className="flex flex-col">
+                                    {/* <label className="text-lg font-bold pb-1">
+                                <span className="border-b-2">Select Query</span>
                             </label>
-                            <input
-                                type="date"
-                                name="start_date"
-                                className="form-input"
-                                value={formValues.start_date}
+                            <select
+                                name="query_option"
+                                className="form-input py-1"
+                                value={formValues.query_option}
                                 onChange={handleInputChange}
-                            />
-                        </div>
+                            >
+                                <option value="query1">Query 1</option>
+                                <option value="query2">Query 2</option>
+                                <option value="query3">Query 3</option>
+                                <option value="query4">Query 4</option>
+                                <option value="query5">Query 5</option>
+                            </select> */}
+                                </div>
 
-                        <div className="flex flex-col">
-                            <label className="form-label">
-                                <span className="border-b-2">End Date</span>
-                            </label>
-                            <input
-                                type="date"
-                                name="end_date"
-                                className="form-input"
-                                value={formValues.end_date}
-                                onChange={handleInputChange}
-                            />
-                        </div>
-                    </div>
+                                {/* date selections */}
+                                <div className="flex flex-row space-x-8">
+                                    <div className="flex flex-col">
+                                        <label className="form-label">
+                                            <span className="border-b-2">
+                                                Start Date
+                                            </span>
+                                        </label>
+                                        <input
+                                            type="number"
+                                            name="start_date"
+                                            className="form-input"
+                                            value={formValues.start_date}
+                                            onChange={handleInputChange}
+                                            min="1950"
+                                            max={new Date().getFullYear()}
+                                            placeholder="YYYY"
+                                            disabled={datesDisabled}
+                                        />
+                                    </div>
 
-                    {/* form submission */}
-                    <div className="flex flex-row">
-                        <button className="flex flex-row font-semibold bg-blue-400 text-white py-1 rounded-full justify-center w-48">
-                            Query
-                        </button>
+                                    <div className="flex flex-col">
+                                        <label className="form-label">
+                                            <span className="border-b-2">
+                                                End Date
+                                            </span>
+                                        </label>
+                                        <input
+                                            type="number"
+                                            name="end_date"
+                                            className="form-input"
+                                            value={formValues.end_date}
+                                            onChange={handleInputChange}
+                                            min="1950"
+                                            max={new Date().getFullYear()}
+                                            placeholder="YYYY"
+                                            disabled={datesDisabled}
+                                        />
+                                    </div>
+                                </div>
+
+                                {/* form submission */}
+                                <div className="flex flex-row">
+                                    <button className="flex flex-row font-semibold bg-blue-400 text-white py-1 rounded-full justify-center w-48">
+                                        Query
+                                    </button>
+                                </div>
+                            </form>
+                            <div className="flex flex-col w-96 space-y-2">
+                                <QueryScreenNavButton
+                                    page_url="/"
+                                    text="Home"
+                                />
+                                <QueryScreenNavButton
+                                    page_url="/custom-query"
+                                    text="Custom Query"
+                                />
+                            </div>
+                        </div>
+                        {/* End Form Container */}
+
+                        {/* Start Table Section */}
+                        <div className="query-examples">
+                            <div className="query-table">
+                                <div className="font-semibold text-xl">
+                                    <th>Query Description</th>
+                                </div>
+                                {queries.map((query, id) => {
+                                    return (
+                                        <div
+                                            key={query.queryNumber}
+                                            className={`query-table-data cursor-pointer ${
+                                                formValues.query_option ===
+                                                query.queryNumber
+                                                    ? "bg-orange-400 shadow-blue-500"
+                                                    : "hover:bg-gray-700"
+                                            }`}
+                                            onClick={() =>
+                                                setFormValues((prev) => ({
+                                                    ...prev,
+                                                    query_option:
+                                                        query.queryNumber,
+                                                }))
+                                            }
+                                        >
+                                            <div className="px-4 py-2 rounded-lg">
+                                                {query.queryDescription}
+                                            </div>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        </div>
+                        {/* End Table Section */}
                     </div>
-                </form>
-                <div className="flex flex-col w-96 space-y-2">
-                    <QueryScreenNavButton page_url="/" text="Home" />
-                    <QueryScreenNavButton
-                        page_url="/custom-query"
-                        text="Custom Query"
-                    />
-                </div>
-            </div>
+                    {/* End Top Section */}
+
+                    {/* Graph Section */}
+                    <div
+                        className={`graph-container ${
+                            points.length > 0 ? "bg-gray-200" : ""
+                        }`}
+                    >
+                        {/* <p className="text-lg font-bold pb-1">
+                            <span className="border-b-2">Graph</span>
+                        </p> */}
+                        {/* <div className="flex flex-row w-full bg-gray-400 h-96" /> */}
+                        {/* <p>Query selected: {getResponse}</p> */}
+                        {points.length > 0 ? (
+                            chartType === "line" ? (
+                                <ChartComponent
+                                    labels={labels}
+                                    points={points}
+                                    title={title}
+                                    ylabel={ylabel}
+                                />
+                            ) : (
+                                <BarChartComponent
+                                    data={data}
+                                    title={title}
+                                    ylabel={ylabel}
+                                />
+                            )
+                        ) : (
+                            <p className="text-gray-300 font-semibold">
+                                Select a query and date range to display data
+                            </p>
+                        )}
+                    </div>
+                    {/*End Graph Section*/}
+                </>
+            )}
         </div>
     );
 };

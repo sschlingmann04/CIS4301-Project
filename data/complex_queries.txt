@@ -1,0 +1,102 @@
+Query 1:
+
+How has the average playtime of games changed over the years and
+what was the peak?
+SELECT EXTRACT(YEAR FROM Release) AS Year, AVG(Playtime) AS AveragePlaytime
+FROM Game
+GROUP BY EXTRACT(YEAR FROM Release)
+ORDER BY Year;
+(peak year)
+SELECT EXTRACT(YEAR FROM Release) AS Year, AVG(Playtime) AS AveragePlaytime
+FROM Game
+GROUP BY EXTRACT(YEAR FROM Release)
+ORDER BY AveragePlaytime DESC
+FETCH FIRST 1 ROW ONLY;
+
+
+
+
+
+Query 3:
+
+How many video games are released each year and are there certain
+months that more games are released?
+SELECT EXTRACT(YEAR FROM Release) AS Year, COUNT(*) AS NumberOfGames
+FROM Game
+GROUP BY EXTRACT(YEAR FROM Release)
+ORDER BY Year;
+
+(per month)
+SELECT EXTRACT(MONTH FROM Release) AS Month, COUNT(*) AS NumberOfGames
+FROM Game
+GROUP BY EXTRACT(MONTH FROM Release)
+ORDER BY Month;
+
+
+Query 4:
+
+How has the number of games released per platform changed over the years?
+(not positive with this one)
+SELECT EXTRACT(YEAR FROM g.Release) AS Year, p.Name AS Platform, COUNT(*) AS NumberOfGames
+FROM Game g
+JOIN PlayableOn po ON g.GameID = po.GameID
+JOIN Platform p ON po.PlatformID = p.PlatformID
+GROUP BY EXTRACT(YEAR FROM g.Release), p.Name
+ORDER BY Year, Platform;
+
+
+Query 5:
+
+How did the covid pandemic affect the numbers of games that were
+released and updated?
+(Released)
+SELECT EXTRACT(YEAR FROM Release) AS ReleaseYear, COUNT(*) AS GamesReleased
+FROM Game
+WHERE EXTRACT(YEAR FROM Release) BETWEEN 2020 AND 2021
+GROUP BY EXTRACT(YEAR FROM Release)
+ORDER BY ReleaseYear;
+
+(updated)
+SELECT EXTRACT(YEAR FROM Updated) AS UpdateYear, COUNT(*) AS GamesUpdated
+FROM Game
+WHERE EXTRACT(YEAR FROM Updated) BETWEEN 2020 AND 2021
+GROUP BY EXTRACT(YEAR FROM Updated)
+ORDER BY UpdateYear;
+
+
+
+Query 6:
+
+Are there certain game genres that have increased or decreased in
+popularity over the years?
+(not positive on this either)
+SELECT EXTRACT(YEAR FROM g.Release) AS Year, ge.Name AS Genre,  COUNT(*) AS NumberOfGames
+FROM Game g
+JOIN GenreOf go ON g.GameID = go.GameID
+JOIN Genre ge ON go.GenreID = ge.GenreID
+GROUP BY EXTRACT(YEAR FROM g.Release), ge.Name
+ORDER BY Year, Genre;
+
+Query 7:
+
+How has the number of games released by each developer changed
+over the years?
+SELECT EXTRACT(YEAR FROM g.Release) AS Year, d.Name AS Developer,  COUNT(*) AS NumberOfGames
+FROM Game g
+JOIN DevelopedBy db ON g.GameID = db.GameID
+JOIN Developer d ON db.DeveloperID = d.DeveloperID
+GROUP BY EXTRACT(YEAR FROM g.Release), d.Name
+ORDER BY Year, Developer;
+
+
+
+Query 8:
+
+How has the number of games released by each publisher changed
+over the years?
+SELECT EXTRACT(YEAR FROM g.Release) AS Year, p.Name AS Publisher,  COUNT(*) AS NumberOfGames
+FROM Game g
+JOIN PublishedBy pb ON g.GameID = pb.GameID
+JOIN Publisher p ON pb.PublisherID = p.PublisherID
+GROUP BY EXTRACT(YEAR FROM g.Release), p.Name
+ORDER BY Year, Publisher;
