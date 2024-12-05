@@ -1,0 +1,11 @@
+tables we have
+
+Game
+developer
+DevelopedBy
+genre
+GenreOf
+platform
+PlayableOn
+PublishedBy
+publisher
