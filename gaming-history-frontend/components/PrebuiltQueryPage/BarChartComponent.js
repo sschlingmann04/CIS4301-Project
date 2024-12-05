@@ -63,10 +63,16 @@ const BarChartComponent = ({ data, title, ylabel }) => {
                 text: title,
             },
             zoom: {
+                limit: {
+                    min: 0,
+                },
                 pan: {
                     enabled: true,
                     mode: "xy",
                     threshold: 5,
+                    limit: {
+                        min: 0,
+                    },
                 },
                 zoom: {
                     wheel: {
@@ -85,6 +91,9 @@ const BarChartComponent = ({ data, title, ylabel }) => {
                 title: {
                     display: true,
                     text: "Year",
+                },
+                y: {
+                    min: 0,
                 },
             },
             y: {
