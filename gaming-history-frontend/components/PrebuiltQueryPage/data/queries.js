@@ -3,7 +3,7 @@ const queries = [
         queryNumber: "query1",
         queryType: "line",
         queryTitle: "Average Playtime Over Time",
-        queryYlabel: "Average Playtime",
+        queryYlabel: "Average Playtime In Hours",
         queryDescription:
             "How has the average playtime of games changed over the years and what was the peak?",
     },
@@ -37,16 +37,16 @@ const queries = [
         queryTitle: "Genre Trends over Time",
         queryYlabel: "Number of Games",
         queryDescription:
-            "Are there certain game genres that haveincreased or decreased in popularity over the years?",
+            "Are there certain game genres that have increased or decreased in popularity over the years?",
     },
-    {
-        queryNumber: "query6",
-        queryType: "stacked",
-        queryTitle: "Games per Developer",
-        queryYlabel: "Number of Games",
-        queryDescription:
-            "How has the number of games released by each developer changed over the years?",
-    },
+    // {
+    //     queryNumber: "query6",
+    //     queryType: "line",
+    //     queryTitle: "Games per Developer",
+    //     queryYlabel: "Number of Games",
+    //     queryDescription:
+    //         "How has the number of games released by each developer changed over the years?",
+    // },
     {
         queryNumber: "query7",
         queryType: "line",

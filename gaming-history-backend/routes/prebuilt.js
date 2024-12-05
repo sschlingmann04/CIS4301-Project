@@ -98,12 +98,13 @@ router.get("/query4", async (req, res) => {
     // start year will be 2020 set by frontend
     // end year will be 2021 set by frontend
 
-    const sql_query = `SELECT EXTRACT(YEAR FROM Updated) AS UpdateYear, COUNT(*) AS GamesUpdated
+    const sql_query = `SELECT EXTRACT(YEAR FROM Release) AS ReleaseYear, COUNT(*) AS GamesReleased
         FROM SSCHLINGMANN.Game
-        WHERE EXTRACT(YEAR FROM Updated) BETWEEN :start_year AND :end_year
-        GROUP BY EXTRACT(YEAR FROM Updated)
-        ORDER BY UpdateYear`;
+        WHERE EXTRACT(YEAR FROM Release) BETWEEN :start_year AND :end_year
+        GROUP BY EXTRACT(YEAR FROM Release)
+        ORDER BY ReleaseYear`;
 
+    // const result = await runQuery(sql_query);
     const result = await runQuery(sql_query, { start_year, end_year });
     res.json(result);
 });
@@ -130,13 +131,12 @@ router.get("/query6", async (req, res) => {
     const end_year = parseInt(req.query.end_year);
 
     const sql_query = `
-        SELECT EXTRACT(YEAR FROM g.Release) AS Year, d.Name AS Developer, COUNT(*) AS NumberOfGames
+        SELECT EXTRACT(YEAR FROM g.Release) AS Year, COUNT(*) AS NumberOfGames
         FROM SSCHLINGMANN.Game g
         JOIN SSCHLINGMANN.DevelopedBy db ON g.GameID = db.GameID
-        JOIN SSCHLINGMANN.Developer d ON db.DeveloperID = d.DeveloperID
         WHERE EXTRACT(YEAR FROM g.Release) BETWEEN :start_year AND :end_year
-        GROUP BY EXTRACT(YEAR FROM g.Release), d.Name
-        ORDER BY Year, Developer`;
+        GROUP BY EXTRACT(YEAR FROM g.Release)
+        ORDER BY Year`;
 
     const result = await runQuery(sql_query, { start_year, end_year });
     res.json(result);

@@ -96,8 +96,8 @@ const PreBuiltQuery = () => {
         if (formValues.query_option === "query4") {
             setFormValues((prev) => ({
                 ...prev,
-                start_date: "2020",
-                end_date: "2021",
+                start_date: "2017",
+                end_date: "2020",
             }));
             setDatesDisabled(true);
         } else {
@@ -124,9 +124,7 @@ const PreBuiltQuery = () => {
                 <link rel="icon" href="/favicon.ico" />
             </Head>
             <h1 className="text-2xl font-semibold">
-                <span className="pb-1 border-b">
-                    Gaming Through Out History
-                </span>
+                <span className="pb-1 border-b">Gaming Throughout History</span>
             </h1>
 
             {isClient && (
@@ -138,23 +136,7 @@ const PreBuiltQuery = () => {
                                 className="form-styles"
                                 onSubmit={handleSubmit}
                             >
-                                <div className="flex flex-col">
-                                    {/* <label className="text-lg font-bold pb-1">
-                                <span className="border-b-2">Select Query</span>
-                            </label>
-                            <select
-                                name="query_option"
-                                className="form-input py-1"
-                                value={formValues.query_option}
-                                onChange={handleInputChange}
-                            >
-                                <option value="query1">Query 1</option>
-                                <option value="query2">Query 2</option>
-                                <option value="query3">Query 3</option>
-                                <option value="query4">Query 4</option>
-                                <option value="query5">Query 5</option>
-                            </select> */}
-                                </div>
+                                <div className="flex flex-col"></div>
 
                                 {/* date selections */}
                                 <div className="flex flex-row space-x-8">
@@ -171,7 +153,7 @@ const PreBuiltQuery = () => {
                                             value={formValues.start_date}
                                             onChange={handleInputChange}
                                             min="1950"
-                                            max={new Date().getFullYear()}
+                                            max="2020"
                                             placeholder="YYYY"
                                             disabled={datesDisabled}
                                         />
@@ -190,7 +172,7 @@ const PreBuiltQuery = () => {
                                             value={formValues.end_date}
                                             onChange={handleInputChange}
                                             min="1950"
-                                            max={new Date().getFullYear()}
+                                            max="2020"
                                             placeholder="YYYY"
                                             disabled={datesDisabled}
                                         />
